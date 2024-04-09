@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "ES6",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "moduleResolution": "Node",
+    "outDir": "./dist"
+  },
+  "ts-node": {
+    "esm": true,
+    "compiler": "typescript"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}
