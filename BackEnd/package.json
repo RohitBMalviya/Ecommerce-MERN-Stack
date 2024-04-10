@@ -1,0 +1,31 @@
+{
+  "name": "ecommerce-website",
+  "version": "1.0.0",
+  "description": "To create the ecommerce website",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "concurrently \"tsc -w\" \"nodemon dist/index.js \""
+  },
+  "keywords": [
+    "NextJs",
+    "Express",
+    "Typescript",
+    "Mongoose",
+    "Redux"
+  ],
+  "author": "Rohit Malviya",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.7",
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.4"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
