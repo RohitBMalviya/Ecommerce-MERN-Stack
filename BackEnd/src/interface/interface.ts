@@ -13,3 +13,15 @@ export interface Api {
   error?: never[];
   stack?: any;
 }
+
+export interface ProductID {
+  name: string;
+  description: string;
+  price: number;
+  rating: number;
+  image: { public_id: string; url: string };
+  category: string;
+  stock: number;
+  noOfreview: number;
+  reviews: { name: string; rating: number; comment: string }[];
+}

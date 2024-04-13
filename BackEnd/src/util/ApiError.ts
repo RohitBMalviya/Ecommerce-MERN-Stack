@@ -11,7 +11,7 @@ class ApiError extends Error implements Api {
     statusCode: number,
     message: string,
     errors: never[] = [],
-    stack: any
+    stack?: any
   ) {
     super(message);
     this.statusCode = statusCode;
