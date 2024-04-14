@@ -2,6 +2,7 @@ import ApiResponse from "../../util/ApiResponse.js";
 import ApiError from "../../util/ApiError.js";
 import PromiseHandler from "../../util/PromiseHandler.js";
 import { Product } from "../..//models/Product/product.model.js";
+import ApiFeatures from "../../util/ApiFeatures.js";
 
 // For the Admin Only * Create or Insert Product *
 export const createProduct = PromiseHandler(async (request, response, next) => {
@@ -37,8 +38,11 @@ export const createProduct = PromiseHandler(async (request, response, next) => {
 
 // Read All Product
 export const readallProduct = PromiseHandler(
-  async (_request, response, next) => {
-    const ProductGet = await Product.find();
+  async (request, response, next) => {
+    const apiFeature = new ApiFeatures(Product.find(), request.query)
+      .Search()
+      .filter();
+    const ProductGet = await apiFeature.query;
 
     if (!(ProductGet?.length && ProductGet)) {
       return next(

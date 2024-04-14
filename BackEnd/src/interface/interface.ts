@@ -5,6 +5,18 @@ export interface UserID {
   confirm_password?: string;
 }
 
+export interface ProductID {
+  name: string;
+  description: string;
+  price: number;
+  rating: number;
+  image: { public_id: string; url: string };
+  category: string;
+  stock: number;
+  noOfreview: number;
+  reviews: { name: string; rating: number; comment: string }[];
+}
+
 export interface Api {
   statusCode: number;
   data: any;
@@ -18,16 +30,4 @@ export interface Api {
 export interface ExtendError extends Error {
   statusCode: number;
   path?: string;
-}
-
-export interface ProductID {
-  name: string;
-  description: string;
-  price: number;
-  rating: number;
-  image: { public_id: string; url: string };
-  category: string;
-  stock: number;
-  noOfreview: number;
-  reviews: { name: string; rating: number; comment: string }[];
 }
