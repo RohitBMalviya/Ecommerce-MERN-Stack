@@ -5,15 +5,18 @@ class ApiError extends Error implements Api {
   data: any;
   success: boolean;
   // override message: string;
-  error: (string | number)[]; // OR
+  error: { [key: string]: string | number }[]; // OR
   // error: never[];
   override stack: any;
   constructor(
     statusCode: number,
     message: string,
-    errors: (string | number)[] = [message, statusCode], // OR
+    stack?: any,
+    errors: { [key: string]: string | number }[] = [
+      { MessageError: message },
+      { StatusCode: statusCode },
+    ] // OR
     // errors: never[] = [],
-    stack?: any
   ) {
     super(message);
     this.statusCode = statusCode;

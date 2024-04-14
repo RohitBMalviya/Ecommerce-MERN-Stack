@@ -4,6 +4,14 @@ import ConnectDB from "./database/database.mongoose.js";
 
 dotenv.config({ path: "./env" });
 
+// when the Variable is Not defined
+// Modified Error
+process.on("uncaughtException", (error: Error) => {
+  console.error(`Error: ${error.message}`);
+  console.log("ShutDown the Server");
+  process.exit(1);
+});
+
 const PORT: string | number = process.env.PORT || 5000;
 
 ConnectDB()

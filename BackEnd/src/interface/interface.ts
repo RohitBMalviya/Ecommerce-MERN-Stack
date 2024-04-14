@@ -10,13 +10,14 @@ export interface Api {
   data: any;
   message: string;
   success: boolean;
-  error?: (string | number)[]; // OR
+  error?: { [key: string]: string | number }[]; // OR
   // error?: never[];
   stack?: any;
 }
 
 export interface ExtendError extends Error {
   statusCode: number;
+  path?: string;
 }
 
 export interface ProductID {

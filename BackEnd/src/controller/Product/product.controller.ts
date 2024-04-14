@@ -2,7 +2,6 @@ import ApiResponse from "../../util/ApiResponse.js";
 import ApiError from "../../util/ApiError.js";
 import PromiseHandler from "../../util/PromiseHandler.js";
 import { Product } from "../..//models/Product/product.model.js";
-import { log } from "console";
 
 // For the Admin Only * Create or Insert Product *
 export const createProduct = PromiseHandler(async (request, response, next) => {
@@ -13,7 +12,7 @@ export const createProduct = PromiseHandler(async (request, response, next) => {
   if (!productCreated) {
     return next(
       new ApiError(
-        400,
+        500,
         "Something Went Wrong While Inserting Detail of Product"
       )
     );
