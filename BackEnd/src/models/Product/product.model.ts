@@ -24,16 +24,18 @@ const productSchmea: mongoose.Schema<ProductID> =
         maxlength: [5, "Rating Should not be more than 5 stars"],
         default: 0,
       },
-      image: {
-        public_id: {
-          type: String,
-          required: true,
+      image: [
+        {
+          public_id: {
+            type: String,
+            required: true,
+          },
+          url: {
+            type: String,
+            required: true,
+          },
         },
-        url: {
-          type: String,
-          required: true,
-        },
-      },
+      ],
       category: {
         type: String,
         required: [true, "Please Enter the Category"],

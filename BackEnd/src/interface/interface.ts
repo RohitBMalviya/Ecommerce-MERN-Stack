@@ -3,6 +3,10 @@ export interface UserID {
   email: string;
   password: string;
   confirm_password?: string;
+  avatar?: { public_id: string; url: string };
+  role: string;
+  refreshToken: string;
+  refreshTokenExpiry: string;
 }
 
 export interface ProductID {
@@ -10,7 +14,7 @@ export interface ProductID {
   description: string;
   price: number;
   rating: number;
-  image: { public_id: string; url: string };
+  image: { public_id: string; url: string }[];
   category: string;
   stock: number;
   noOfreview: number;

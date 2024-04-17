@@ -39,9 +39,13 @@ export const createProduct = PromiseHandler(async (request, response, next) => {
 // Read All Product
 export const readallProduct = PromiseHandler(
   async (request, response, next) => {
+    const resultPerPage: number = 5;
+    const productCount: number = await Product.countDocuments();
     const apiFeature = new ApiFeatures(Product.find(), request.query)
       .Search()
-      .filter();
+      .filter()
+      .pagination(resultPerPage);
+
     const ProductGet = await apiFeature.query;
 
     if (!(ProductGet?.length && ProductGet)) {
@@ -56,7 +60,13 @@ export const readallProduct = PromiseHandler(
 
     return response
       .status(201)
-      .json(new ApiResponse(201, ProductGet, "All Product Fetch Successfully"));
+      .json(
+        new ApiResponse(
+          201,
+          { Product: ProductGet, ProductCount: productCount },
+          "All Product Fetch Successfully"
+        )
+      );
   }
 );
 
