@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { UserID } from "../../interface/interface.js";
 import Validator from "validator";
+import bcrypt from "bcrypt";
 
 const userSchema: mongoose.Schema<UserID> = new mongoose.Schema<UserID>(
   {
@@ -25,7 +26,7 @@ const userSchema: mongoose.Schema<UserID> = new mongoose.Schema<UserID>(
       required: [true, "Password is required"],
       minlength: [8, "Password should have 8 min characters"],
       maxlength: [16, "Password should not be greater than 16 characters"],
-      select: false,
+      select: true,
     },
     confirm_password: {
       type: String,
@@ -37,11 +38,11 @@ const userSchema: mongoose.Schema<UserID> = new mongoose.Schema<UserID>(
     avatar: {
       public_id: {
         type: String,
-        required: true,
+        // required: true,
       },
       url: {
         type: String,
-        required: true,
+        // required: true,
       },
     },
     role: {
@@ -55,5 +56,20 @@ const userSchema: mongoose.Schema<UserID> = new mongoose.Schema<UserID>(
   },
   { timestamps: true }
 );
+
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password && confirm_password")) {
+    return next();
+  }
+  this.password = await bcrypt.hash(this.password, 8);
+  this.confirm_password = await bcrypt.hash(this.confirm_password!, 8);
+  next();
+});
+
+userSchema.methods.isPasswordCorrect = async function (
+  password: string
+): Promise<boolean> {
+  return await bcrypt.compare(password, this.password);
+};
 
 export const User: mongoose.Model<UserID> = mongoose.model("User", userSchema);

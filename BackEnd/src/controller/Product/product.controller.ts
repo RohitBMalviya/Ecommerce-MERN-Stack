@@ -10,6 +10,7 @@ export const createProduct = PromiseHandler(async (request, response, next) => {
 
   const productCreated = await Product.create(productDetail);
 
+  // ***** To check the Product detail are Filled Correct and Product Created ***** //
   if (!productCreated) {
     return next(
       new ApiError(
@@ -30,7 +31,6 @@ export const createProduct = PromiseHandler(async (request, response, next) => {
     //   "Something Went Wrong While Inserting Detail of Product"
     // );
   }
-
   return response
     .status(201)
     .json(new ApiResponse(201, productCreated, "Product Created Successfully"));
@@ -39,6 +39,7 @@ export const createProduct = PromiseHandler(async (request, response, next) => {
 // Read All Product
 export const readallProduct = PromiseHandler(
   async (request, response, next) => {
+    // ***** Fetch All Product by Serach,Filter and Also add the Pagination ***** //
     const resultPerPage: number = 5;
     const productCount: number = await Product.countDocuments();
     const apiFeature = new ApiFeatures(Product.find(), request.query)
@@ -46,8 +47,8 @@ export const readallProduct = PromiseHandler(
       .filter()
       .pagination(resultPerPage);
 
+    // ***** Check the Product Exists or Not? ***** //
     const ProductGet = await apiFeature.query;
-
     if (!(ProductGet?.length && ProductGet)) {
       return next(
         new ApiError(404, "Empty Product or Product does not Exists")
@@ -57,7 +58,6 @@ export const readallProduct = PromiseHandler(
       //   .json(new ApiError(404, "Empty Product or Product does not Exists"));
       // throw new ApiError(404, "Empty Product or Product does not Exists");
     }
-
     return response
       .status(201)
       .json(
@@ -75,8 +75,8 @@ export const readsingleProduct = PromiseHandler(
   async (request, response, next) => {
     const productId = request.params.id;
 
+    // ***** Fetch the Product Single ***** //
     const productDeatail = await Product.findById(productId);
-
     if (!productDeatail) {
       return next(new ApiError(404, "Product does not Exist"));
       // return response
@@ -95,14 +95,13 @@ export const updateProduct = PromiseHandler(async (request, response, next) => {
   const productToUpdate = request.body;
   const productId = request.params.id;
 
+  // ***** To check the Product Exist if Exist the Update the Product ***** //
   const checkProduct = await Product.findById(productId);
-
   if (!checkProduct) {
     return next(new ApiError(404, "Product not Found"));
     // return response.status(404).json(new ApiError(404, "Product not Found"));
     // throw new ApiError(404, "Product not Found");
   }
-
   const productUpdate = await Product.findByIdAndUpdate(
     productId,
     {
@@ -113,7 +112,6 @@ export const updateProduct = PromiseHandler(async (request, response, next) => {
       runValidators: true,
     }
   );
-
   return response
     .status(200)
     .json(new ApiResponse(200, productUpdate, "Product Update Successfully"));
@@ -123,8 +121,8 @@ export const updateProduct = PromiseHandler(async (request, response, next) => {
 export const deleteProduct = PromiseHandler(async (request, response, next) => {
   const productId = request.params.id;
 
+  // ***** To check the Product Exist if Exist the Delete the Product ***** //
   const checkProduct = await Product.findById(productId);
-
   if (!checkProduct) {
     return next(new ApiError(404, "Product Already Deleted"));
     // return response
@@ -132,9 +130,7 @@ export const deleteProduct = PromiseHandler(async (request, response, next) => {
     //   .json(new ApiError(404, "Product Already Deleted"));
     // throw new ApiError(404, "Product Already Deleted");
   }
-
   await Product.findByIdAndDelete(productId);
-
   return response
     .status(200)
     .json(new ApiResponse(200, {}, "Product Deleted Successfully"));

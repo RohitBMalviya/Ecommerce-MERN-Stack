@@ -7,6 +7,7 @@ export interface UserID {
   role: string;
   refreshToken: string;
   refreshTokenExpiry: string;
+  isPasswordCorrect(password: string): boolean;
 }
 
 export interface ProductID {
