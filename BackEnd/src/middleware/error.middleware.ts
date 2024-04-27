@@ -20,5 +20,5 @@ export const Error = (
   return response
     .status(error.statusCode)
     .json(new ApiError(error.statusCode, error.message));
-  next!();
+  next();
 };

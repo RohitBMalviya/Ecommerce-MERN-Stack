@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { UserID } from "../../interface/interface.js";
 import Validator from "validator";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const userSchema: mongoose.Schema<UserID> = new mongoose.Schema<UserID>(
   {
@@ -58,7 +59,7 @@ const userSchema: mongoose.Schema<UserID> = new mongoose.Schema<UserID>(
 );
 
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password && confirm_password")) {
+  if (!this.isModified("password")) {
     return next();
   }
   this.password = await bcrypt.hash(this.password, 8);
@@ -72,4 +73,28 @@ userSchema.methods.isPasswordCorrect = async function (
   return await bcrypt.compare(password, this.password);
 };
 
+userSchema.methods.generateAccessToken = function (): string {
+  return jwt.sign(
+    {
+      _id: this._id,
+      email: this.email,
+    },
+    process.env.ACCESSTOKENKEY!,
+    {
+      expiresIn: process.env.ACCESSTOKENEXPIRY!,
+    }
+  );
+};
+
+userSchema.methods.generateRefreshToken = function (): string {
+  return jwt.sign(
+    {
+      _id: this._id,
+    },
+    process.env.REFRESHTOKENKEY!,
+    {
+      expiresIn: process.env.REFRESHTOKENEXPIRY!,
+    }
+  );
+};
 export const User: mongoose.Model<UserID> = mongoose.model("User", userSchema);

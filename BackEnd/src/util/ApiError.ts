@@ -1,4 +1,4 @@
-import { Api } from "src/interface/interface.js";
+import { Api } from "../interface/interface.js";
 
 class ApiError extends Error implements Api {
   statusCode: number;

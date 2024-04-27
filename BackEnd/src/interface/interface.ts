@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken";
 export interface UserID {
   username?: string;
   email: string;
@@ -8,6 +9,8 @@ export interface UserID {
   refreshToken: string;
   refreshTokenExpiry: string;
   isPasswordCorrect(password: string): boolean;
+  generateAccessToken(): string;
+  generateRefreshToken(): string;
 }
 
 export interface ProductID {
@@ -32,7 +35,11 @@ export interface Api {
   stack?: any;
 }
 
+// ***** Extends Interface ***** //
 export interface ExtendError extends Error {
   statusCode: number;
   path?: string;
+}
+export interface ExtendJwtPayload extends JwtPayload {
+  _id: string;
 }
