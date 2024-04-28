@@ -200,6 +200,7 @@ export const updateUserInfo = PromiseHandler(
   }
 );
 
+// For Admin
 export const getCurrentUser = PromiseHandler(
   async (request, response, next) => {
     // ***** Find the User if Exist ***** //
@@ -212,6 +213,14 @@ export const getCurrentUser = PromiseHandler(
       .json(new ApiResponse(200, user, "User Fetch Successfully !!!"));
   }
 );
+
+export const getAllUser = PromiseHandler(async (_request, response) => {
+  const allUser = await User.find();
+
+  return response
+    .status(200)
+    .json(new ApiResponse(200, allUser, "All User Fetch Successfully !!!"));
+});
 
 export const refreshAccessToken = PromiseHandler(
   async (request, response, next) => {
