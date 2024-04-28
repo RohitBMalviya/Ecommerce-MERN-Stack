@@ -24,6 +24,11 @@ const productSchmea: mongoose.Schema<ProductID> =
         maxlength: [5, "Rating Should not be more than 5 stars"],
         default: 0,
       },
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
       image: [
         {
           public_id: {

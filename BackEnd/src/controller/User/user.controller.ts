@@ -23,7 +23,7 @@ const generateAccessandRefreshToken = async (userID: Object) => {
 };
 
 export const userRegister = PromiseHandler(async (request, response, next) => {
-  const { username, email, password, confirm_password, avatar }: UserID =
+  const { username, email, password, confirm_password, avatar, role }: UserID =
     request.body;
 
   // ***** All Fields are required ***** //
@@ -63,6 +63,7 @@ export const userRegister = PromiseHandler(async (request, response, next) => {
       public_id: "this is sample id",
       url: "this is sample url",
     },
+    role,
   });
 
   // ***** To check the User Create or not? ***** //
@@ -73,8 +74,8 @@ export const userRegister = PromiseHandler(async (request, response, next) => {
     );
   }
   return response
-    .status(200)
-    .json(new ApiResponse(200, registerUser, "User Register Successfully !!!"));
+    .status(201)
+    .json(new ApiResponse(201, registerUser, "User Register Successfully !!!"));
 });
 
 export const userLogin = PromiseHandler(async (request, response, next) => {
@@ -140,7 +141,7 @@ export const userLogout = PromiseHandler(async (request, response) => {
     secure: true,
   };
   return response
-    .cookie("accessToken", options)
+    .cookie("accessToken", 0)
     .cookie("refreshToken", options)
     .status(200)
     .json(new ApiResponse(200, {}, "User Logout Successfully !!!"));

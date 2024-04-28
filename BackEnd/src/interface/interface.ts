@@ -1,10 +1,10 @@
 import { JwtPayload } from "jsonwebtoken";
 export interface UserID {
-  username?: string;
+  username: string;
   email: string;
   password: string;
   confirm_password?: string;
-  avatar?: { public_id: string; url: string };
+  avatar: { public_id: string; url: string };
   role: string;
   refreshToken: string;
   refreshTokenExpiry: string;
@@ -21,6 +21,7 @@ export interface ProductID {
   image: { public_id: string; url: string }[];
   category: string;
   stock: number;
+  user: any;
   noOfreview: number;
   reviews: { name: string; rating: number; comment: string }[];
 }

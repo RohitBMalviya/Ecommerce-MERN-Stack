@@ -3,18 +3,15 @@ import ApiError from "../util/ApiError.js";
 import jwt from "jsonwebtoken";
 import { User } from "../models/User/user.model.js";
 import { ExtendJwtPayload } from "../interface/interface.js";
+import PromiseHandler from "../util/PromiseHandler.js";
 
-export const verifyToken = async (
-  request: Request,
-  _response: Response,
-  next: NextFunction
-) => {
+export const verifyToken = PromiseHandler(async (request, _response, next) => {
   try {
     // ***** Get token and check token exist ***** //
     const token =
       (await request.cookies?.accessToken) ||
       request.header("Authorization")?.replace("Bearer", "");
-    if (!token) {
+    if (token === "0") {
       return next(new ApiError(401, "UnAuthorized Request"));
     }
 
@@ -38,4 +35,4 @@ export const verifyToken = async (
   } catch (error: any) {
     return next(new ApiError(401, error?.message || "Invalide Access Token"));
   }
-};
+});

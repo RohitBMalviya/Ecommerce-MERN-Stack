@@ -6,11 +6,12 @@ import ApiFeatures from "../../util/ApiFeatures.js";
 
 // For the Admin Only * Create or Insert Product *
 export const createProduct = PromiseHandler(async (request, response, next) => {
+  request.body.user = request.user.id;
+
   const productDetail = request.body;
 
-  const productCreated = await Product.create(productDetail);
-
   // ***** To check the Product detail are Filled Correct and Product Created ***** //
+  const productCreated = await Product.create(productDetail);
   if (!productCreated) {
     return next(
       new ApiError(
