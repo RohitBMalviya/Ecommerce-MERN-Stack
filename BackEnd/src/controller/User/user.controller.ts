@@ -200,7 +200,6 @@ export const updateUserInfo = PromiseHandler(
   }
 );
 
-// For Admin
 export const getCurrentUser = PromiseHandler(
   async (request, response, next) => {
     // ***** Find the User if Exist ***** //
@@ -214,12 +213,27 @@ export const getCurrentUser = PromiseHandler(
   }
 );
 
+// For Admin all User
 export const getAllUser = PromiseHandler(async (_request, response) => {
   const allUser = await User.find();
 
   return response
     .status(200)
     .json(new ApiResponse(200, allUser, "All User Fetch Successfully !!!"));
+});
+
+// For Adim Single User
+export const getSingleUser = PromiseHandler(async (request, response, next) => {
+  // ***** Find the User if Exist ***** //
+  const user = await User.findById(request.params.id);
+  if (!user) {
+    return next(
+      new ApiError(404, `User Not Found with id ${request.params.id}`)
+    );
+  }
+  return response
+    .status(200)
+    .json(new ApiResponse(200, user, "User Fetch Successfully !!!"));
 });
 
 export const refreshAccessToken = PromiseHandler(

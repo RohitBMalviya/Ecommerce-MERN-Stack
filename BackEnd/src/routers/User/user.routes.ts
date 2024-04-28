@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   getAllUser,
   getCurrentUser,
+  getSingleUser,
   refreshAccessToken,
   updatePassword,
   updateUserInfo,
@@ -28,6 +29,9 @@ userRouter.route("/getcurrentuser").get(verifyToken, getCurrentUser);
 userRouter
   .route("/getalluser")
   .get(verifyToken, authorizedRole("admin"), getAllUser);
+userRouter
+  .route("/getsingleuser/:id")
+  .get(verifyToken, authorizedRole("admin"), getSingleUser);
 userRouter.route("/refreshaccesstoken").post(refreshAccessToken);
 
 export default userRouter;
