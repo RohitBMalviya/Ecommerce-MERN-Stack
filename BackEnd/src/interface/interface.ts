@@ -7,10 +7,12 @@ export interface UserID {
   avatar: { public_id: string; url: string };
   role: string;
   refreshToken: string;
-  refreshTokenExpiry: string;
+  resetPasswordToken: string | undefined;
+  resetPasswordExpire: Date | undefined;
   isPasswordCorrect(password: string): boolean;
   generateAccessToken(): string;
   generateRefreshToken(): string;
+  generateResetPassword(): string;
 }
 
 export interface ProductID {
@@ -24,6 +26,15 @@ export interface ProductID {
   user: any;
   noOfreview: number;
   reviews: { name: string; rating: number; comment: string }[];
+}
+
+export interface MailOption {
+  email?: string;
+  from?: string;
+  to?: string;
+  subject: string;
+  message?: string;
+  text?: string;
 }
 
 export interface Api {
@@ -40,6 +51,8 @@ export interface Api {
 export interface ExtendError extends Error {
   statusCode: number;
   path?: string;
+  code?: number;
+  keyValue?: any;
 }
 export interface ExtendJwtPayload extends JwtPayload {
   _id: string;

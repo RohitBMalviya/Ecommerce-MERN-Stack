@@ -5,6 +5,8 @@ import PromiseHandler from "../../util/PromiseHandler.js";
 import ApiError from "../../util/ApiError.js";
 import uploadFile from "../../util/UploadAvatar.js";
 import jwt from "jsonwebtoken";
+import { sendEmail } from "../../util/sendEmail.js";
+import crypto from "crypto";
 
 const generateAccessandRefreshToken = async (userID: Object) => {
   try {
@@ -86,7 +88,7 @@ export const userLogin = PromiseHandler(async (request, response, next) => {
     return next(new ApiError(400, "Email & Password is Required"));
   }
 
-  // ***** Find the User  & check the Password is correct ***** //
+  // ***** Find the User & check the Password is correct ***** //
   const user = await User.findOne({ email });
   if (!user) {
     return next(new ApiError(404, "User Does not Found"));
@@ -261,5 +263,102 @@ export const refreshAccessToken = PromiseHandler(
     } catch (error: any) {
       return next(new ApiError(400, error?.message || "Invalid refresh Token"));
     }
+  }
+);
+
+export const userForgotPassword = PromiseHandler(
+  async (request, response, next) => {
+    const { email } = request.body;
+    // ***** Find the User if Exist ***** //
+    const user = await User.findOne({ email });
+    if (!user) {
+      return next(new ApiError(404, "User Not Found"));
+    }
+
+    // ***** Get ResetPassword Token and Save in userSchema ***** //
+    const resetToken = user.generateResetPassword();
+
+    await user.save({ validateBeforeSave: false });
+
+    // ***** resetPassword Url and send message to user using nodemailer ***** //
+    const resetPasswordUrl: string = `${request.protocol}://${request.get(
+      "host"
+    )}/api/v1/users/resetpassword/${resetToken}`;
+    const message: string = `Your Password Reset Token is :- \n\n ${resetPasswordUrl} \n\n if you have not requested this email then Please ignore`;
+    try {
+      await sendEmail({
+        email: user.email,
+        subject: `Ecommerce Passsword Recovery`,
+        message: message,
+      });
+      return response
+        .status(200)
+        .json(
+          new ApiResponse(
+            200,
+            {},
+            `Email Send to ${user.email} Successfully !!!`
+          )
+        );
+    } catch (error: any) {
+      // ***** if not exist then undefined password and expiry date ***** //
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
+      await user.save({ validateBeforeSave: false });
+      return next(new ApiError(500, `${error.message}`));
+    }
+  }
+);
+
+export const userResetPassword = PromiseHandler(
+  async (request, response, next) => {
+    const { password, confirm_password } = request.body;
+    // ***** Creating token hash ***** //
+    const resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(request.params?.token!)
+      .digest("hex");
+
+    // ***** Find the User & check the Password is correct ***** //
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+    if (!user) {
+      return next(new ApiError(400, "Reset password expired or invalid"));
+    }
+    if (password !== confirm_password) {
+      return next(new ApiError(400, "Confirm Password did not Match"));
+    }
+
+    // ***** To regenerate the access and refresh Token when password reset ***** //
+    const { accessToken, refreshToken } = await generateAccessandRefreshToken(
+      user._id
+    );
+    const options = {
+      httpOnly: true,
+      secure: true,
+    };
+
+    // ***** Find the User and send response ***** //
+    const findUser = await User.findById(user._id).select(
+      "-password -refreshToken"
+    );
+    if (!findUser) {
+      return next(new ApiError(404, "User Not Found"));
+    }
+
+    // ***** After Password reset set the resetpassword and expire date to null so that no one can change the password again unless it request again for forgot password  ***** //
+    user.password = password;
+    user.confirm_password = confirm_password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    return response
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", refreshToken, options)
+      .status(200)
+      .json(new ApiResponse(200, findUser, "Password Reset Successfully !!!"));
   }
 );

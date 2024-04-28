@@ -3,6 +3,7 @@ import { UserID } from "../../interface/interface.js";
 import Validator from "validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 const userSchema: mongoose.Schema<UserID> = new mongoose.Schema<UserID>(
   {
@@ -53,7 +54,8 @@ const userSchema: mongoose.Schema<UserID> = new mongoose.Schema<UserID>(
     refreshToken: {
       type: String,
     },
-    refreshTokenExpiry: Date,
+    resetPasswordToken: { type: String },
+    resetPasswordExpire: { type: Date },
   },
   { timestamps: true }
 );
@@ -96,5 +98,15 @@ userSchema.methods.generateRefreshToken = function (): string {
       expiresIn: process.env.REFRESHTOKENEXPIRY!,
     }
   );
+};
+
+userSchema.methods.generateResetPassword = function (): string {
+  const resetToken = crypto.randomBytes(20).toString("hex");
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+  return resetToken;
 };
 export const User: mongoose.Model<UserID> = mongoose.model("User", userSchema);
