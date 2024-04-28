@@ -27,10 +27,10 @@ userRouter.route("/updatepassword").post(verifyToken, updatePassword);
 userRouter.route("/updateuserinfo").patch(verifyToken, updateUserInfo);
 userRouter.route("/getcurrentuser").get(verifyToken, getCurrentUser);
 userRouter
-  .route("/getalluser")
+  .route("admin/getalluser")
   .get(verifyToken, authorizedRole("admin"), getAllUser);
 userRouter
-  .route("/getsingleuser/:id")
+  .route("admin/getsingleuser/:id")
   .get(verifyToken, authorizedRole("admin"), getSingleUser);
 userRouter.route("/refreshaccesstoken").post(refreshAccessToken);
 
