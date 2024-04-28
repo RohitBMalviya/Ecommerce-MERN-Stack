@@ -1,11 +1,13 @@
 import { Router } from "express";
 import {
+  deleteUserInfo,
   getAllUser,
   getCurrentUser,
   getSingleUser,
   refreshAccessToken,
   updatePassword,
   updateUserInfo,
+  updateUserRole,
   userForgotPassword,
   userLogin,
   userLogout,
@@ -27,11 +29,19 @@ userRouter.route("/updatepassword").post(verifyToken, updatePassword);
 userRouter.route("/updateuserinfo").patch(verifyToken, updateUserInfo);
 userRouter.route("/getcurrentuser").get(verifyToken, getCurrentUser);
 userRouter
-  .route("admin/getalluser")
+  .route("/admin/getalluser")
   .get(verifyToken, authorizedRole("admin"), getAllUser);
 userRouter
-  .route("admin/getsingleuser/:id")
+  .route("/admin/getsingleuser/:id")
   .get(verifyToken, authorizedRole("admin"), getSingleUser);
+userRouter
+  .route("/admin/updateuserrole/:id")
+  .patch(verifyToken, authorizedRole("admin"), updateUserRole);
+userRouter
+  .route("/admin/deleteuserinfo/:id")
+  .delete(verifyToken, authorizedRole("admin"), deleteUserInfo);
+
 userRouter.route("/refreshaccesstoken").post(refreshAccessToken);
 
 export default userRouter;
+  

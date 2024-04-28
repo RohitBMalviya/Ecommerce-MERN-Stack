@@ -200,16 +200,38 @@ export const updateUserInfo = PromiseHandler(
   }
 );
 
-export const getCurrentUser = PromiseHandler(
+// For Admin to Update User Role
+export const updateUserRole = PromiseHandler(
   async (request, response, next) => {
-    // ***** Find the User if Exist ***** //
-    const user = await User.findById(request.user._id);
+    // ***** Find the User and Update the Detail ***** //
+    const { role }: UserID = request.body;
+    if (!role) {
+      return next(new ApiError(401, "Fields is required"));
+    }
+    const user = await User.findByIdAndUpdate(
+      request.params.id,
+      {
+        $set: { role: role },
+      },
+      { new: true }
+    ).select("-password -refreshToken ");
+    return response
+      .status(200)
+      .json(new ApiResponse(200, user, "User Detail Updated Successfully !!!"));
+  }
+);
+
+// For Admin to Delete User Info
+export const deleteUserInfo = PromiseHandler(
+  async (request, response, next) => {
+    // ***** Find the User and Delete the Detail ***** //
+    const user = await User.findByIdAndDelete(request.params.id);
     if (!user) {
       return next(new ApiError(404, "User Not Found"));
     }
     return response
       .status(200)
-      .json(new ApiResponse(200, user, "User Fetch Successfully !!!"));
+      .json(new ApiResponse(200, {}, "User Deleted Successfully !!!"));
   }
 );
 
@@ -235,6 +257,19 @@ export const getSingleUser = PromiseHandler(async (request, response, next) => {
     .status(200)
     .json(new ApiResponse(200, user, "User Fetch Successfully !!!"));
 });
+
+export const getCurrentUser = PromiseHandler(
+  async (request, response, next) => {
+    // ***** Find the User if Exist ***** //
+    const user = await User.findById(request.user._id);
+    if (!user) {
+      return next(new ApiError(404, "User Not Found"));
+    }
+    return response
+      .status(200)
+      .json(new ApiResponse(200, user, "User Fetch Successfully !!!"));
+  }
+);
 
 export const refreshAccessToken = PromiseHandler(
   async (request, response, next) => {
