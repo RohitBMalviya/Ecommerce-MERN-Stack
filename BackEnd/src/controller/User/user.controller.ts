@@ -1,9 +1,10 @@
 import ApiResponse from "../../util/ApiResponse.js";
-import { UserID } from "../../interface/interface.js";
+import { ExtendJwtPayload, UserID } from "../../interface/interface.js";
 import { User } from "../../models/User/user.model.js";
 import PromiseHandler from "../../util/PromiseHandler.js";
 import ApiError from "../../util/ApiError.js";
 import uploadFile from "../../util/UploadAvatar.js";
+import jwt from "jsonwebtoken";
 
 const generateAccessandRefreshToken = async (userID: Object) => {
   try {
@@ -11,9 +12,10 @@ const generateAccessandRefreshToken = async (userID: Object) => {
     if (!user) {
       throw new ApiError(404, "User Not Found");
     }
-    const accessToken = user?.generateAccessToken();
-    const refreshToken = user?.generateRefreshToken();
-    user.refreshToken = refreshToken!;
+    const accessToken: string = user?.generateAccessToken();
+    const refreshToken: string = user?.generateRefreshToken();
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
     return { accessToken, refreshToken };
   } catch (error) {
     throw new ApiError(500, "Something went wrong while generating the tokens");
@@ -64,9 +66,7 @@ export const userRegister = PromiseHandler(async (request, response, next) => {
   });
 
   // ***** To check the User Create or not? ***** //
-  const registerUser = await User.findById(user._id).select(
-    "-password -refreshToken"
-  );
+  const registerUser = await User.findById(user._id).select("-password");
   if (!registerUser) {
     return next(
       new ApiError(500, "Something Went Wrong While Creating the Account")
@@ -106,7 +106,7 @@ export const userLogin = PromiseHandler(async (request, response, next) => {
 
   // ***** Login User ***** //
   const loggedUser = await User.findById(user._id).select(
-    "-password -refreshToken"
+    "-password -refreshToken "
   );
   return response
     .cookie("accessToken", accessToken, options)
@@ -190,7 +190,7 @@ export const updateUserInfo = PromiseHandler(
         $set: { username: username, email: email },
       },
       { new: true }
-    ).select("-password -refreshToken");
+    ).select("-password -refreshToken ");
     return response
       .status(200)
       .json(new ApiResponse(200, user, "User Detail Updated Successfully !!!"));
@@ -207,5 +207,58 @@ export const getCurrentUser = PromiseHandler(
     return response
       .status(200)
       .json(new ApiResponse(200, user, "User Fetch Successfully !!!"));
+  }
+);
+
+export const refreshAccessToken = PromiseHandler(
+  async (request, response, next) => {
+    // ***** Get token and check token exist ***** //
+    const incommingToken =
+      request.cookies?.refreshToken || request.body.refreshToken;
+    if (!incommingToken) {
+      return next(new ApiError(401, "UnAuthorized Request"));
+    }
+
+    try {
+      // ***** Decode the Token ***** //
+      const decodeToken = jwt.verify(
+        incommingToken,
+        process.env.REFRESHTOKENKEY!
+      ) as ExtendJwtPayload;
+
+      // ***** Find the User ***** //
+      const user = await User.findById(decodeToken?._id);
+      if (!user) {
+        return next(new ApiError(404, "User Not Found"));
+      }
+
+      // ***** check the incomming and user save refreshtoken is equal or not ***** //
+      if (incommingToken !== user?.refreshToken) {
+        return next(new ApiError(401, "UnAuthorized Token is Expired or Used"));
+      }
+
+      // ***** Generate new Access and Refresh Token ***** //
+      const { accessToken, refreshToken: newRefreshToken } =
+        await generateAccessandRefreshToken(user._id);
+
+      const options = {
+        httpOnly: true,
+        secure: true,
+      };
+
+      return response
+        .cookie("accessToken", accessToken, options)
+        .cookie("newRefreshToken", newRefreshToken, options)
+        .status(200)
+        .json(
+          new ApiResponse(
+            200,
+            { accessToken, newRefreshToken },
+            "Access Token Refresh Successfully !!!"
+          )
+        );
+    } catch (error: any) {
+      return next(new ApiError(400, error?.message || "Invalid refresh Token"));
+    }
   }
 );

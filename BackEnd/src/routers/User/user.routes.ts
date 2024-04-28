@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   getCurrentUser,
+  refreshAccessToken,
   updatePassword,
   updateUserInfo,
   userLogin,
@@ -18,5 +19,6 @@ userRouter.route("/logout").post(verifyToken, userLogout);
 userRouter.route("/updatepassword").post(verifyToken, updatePassword);
 userRouter.route("/updateuserinfo").patch(verifyToken, updateUserInfo);
 userRouter.route("/getcurrentuser").get(verifyToken, getCurrentUser);
+userRouter.route("/refreshaccesstoken").post(refreshAccessToken);
 
 export default userRouter;
