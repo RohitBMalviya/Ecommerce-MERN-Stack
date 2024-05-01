@@ -1,10 +1,16 @@
 import { JwtPayload } from "jsonwebtoken";
+
+export interface ImageId {
+  public_id: string;
+  url: string;
+}
+
 export interface UserID {
   username: string;
   email: string;
   password: string;
   confirm_password?: string;
-  avatar: { public_id: string; url: string };
+  avatar: ImageId[];
   role: string;
   refreshToken: string;
   resetPasswordToken: string | undefined;
@@ -15,17 +21,26 @@ export interface UserID {
   generateResetPassword(): string;
 }
 
+export interface Reviews {
+  _id?: Object;
+  name: string;
+  rating: number;
+  comment: string;
+  productId?: string | undefined;
+  user: Object;
+}
+
 export interface ProductID {
   name: string;
   description: string;
   price: number;
-  rating: number;
-  image: { public_id: string; url: string }[];
+  ratings: number;
+  image: ImageId[];
   category: string;
   stock: number;
-  user: any;
+  user: Object;
   noOfreview: number;
-  reviews: { name: string; rating: number; comment: string }[];
+  reviews: Reviews[];
 }
 
 export interface MailOption {

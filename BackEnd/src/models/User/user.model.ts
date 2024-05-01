@@ -40,11 +40,11 @@ const userSchema: mongoose.Schema<UserID> = new mongoose.Schema<UserID>(
     avatar: {
       public_id: {
         type: String,
-        // required: true,
+        required: true,
       },
       url: {
         type: String,
-        // required: true,
+        required: true,
       },
     },
     role: {

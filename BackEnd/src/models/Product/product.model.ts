@@ -19,7 +19,7 @@ const productSchmea: mongoose.Schema<ProductID> =
         required: [true, "Please Enter the Price "],
         maxlength: [8, "Price Should not be more than 8 value"],
       },
-      rating: {
+      ratings: {
         type: Number,
         maxlength: [5, "Rating Should not be more than 5 stars"],
         default: 0,
@@ -57,6 +57,11 @@ const productSchmea: mongoose.Schema<ProductID> =
       },
       reviews: [
         {
+          user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+          },
           name: {
             type: String,
             required: true,
