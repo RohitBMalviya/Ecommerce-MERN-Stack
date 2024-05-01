@@ -232,9 +232,11 @@ export const deleteReview = PromiseHandler(async (request, response, next) => {
   await Product.findByIdAndUpdate(
     request.query.productId,
     {
-      ratings: ratings,
-      reviews: reviews,
-      noOfreview: noOfreview,
+      $set: {
+        ratings: ratings,
+        reviews: reviews,
+        noOfreview: noOfreview,
+      },
     },
     { new: true }
   );
