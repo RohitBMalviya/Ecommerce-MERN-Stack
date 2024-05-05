@@ -76,19 +76,33 @@ const orderSchema = new mongoose.Schema<OrderID>(
     },
     itemsPrice: {
       type: Number,
+      required: true,
       default: 0,
     },
     taxPrice: {
       type: Number,
+      required: true,
       default: 0,
     },
     shippingPrice: {
       type: Number,
+      required: true,
       default: 0,
     },
     totalPrice: {
       type: Number,
+      required: true,
       default: 0,
+    },
+    shippingStatus: {
+      type: String,
+      required: true,
+      default: "Processing",
+    },
+    createdAt: {
+      type: Date,
+      requried: true,
+      default: Date.now,
     },
   },
   { timestamps: true }

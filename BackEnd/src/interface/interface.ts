@@ -75,6 +75,8 @@ export interface OrderID {
   taxPrice: Number;
   shippingPrice: Number;
   totalPrice: Number;
+  shippingStatus:string,
+  createdAt:Date
 }
 
 export interface MailOption {
