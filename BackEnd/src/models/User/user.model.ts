@@ -109,4 +109,7 @@ userSchema.methods.generateResetPassword = function (): string {
   this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
   return resetToken;
 };
-export const User: mongoose.Model<UserID> = mongoose.model("User", userSchema);
+export const User: mongoose.Model<UserID> = mongoose.model<UserID>(
+  "User",
+  userSchema
+);

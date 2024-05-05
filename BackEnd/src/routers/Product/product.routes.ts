@@ -12,7 +12,7 @@ import {
 import { verifyToken } from "../../middleware/user.auth.middleware.js";
 import { authorizedRole } from "../../middleware/admin.auth.middleware.js";
 
-const productRouter = Router();
+const productRouter: Router = Router();
 
 productRouter.route("/readallproduct").get(readallProduct);
 productRouter.route("/readsingleproduct/:id").get(readsingleProduct);

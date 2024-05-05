@@ -81,7 +81,7 @@ const productSchmea: mongoose.Schema<ProductID> =
     { timestamps: true }
   );
 
-export const Product: mongoose.Model<ProductID> = mongoose.model(
+export const Product: mongoose.Model<ProductID> = mongoose.model<ProductID>(
   "Product",
   productSchmea
 );

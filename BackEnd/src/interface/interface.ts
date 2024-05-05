@@ -1,9 +1,40 @@
 import { JwtPayload } from "jsonwebtoken";
 
-export interface ImageId {
+export type ImageId = {
   public_id: string;
   url: string;
-}
+};
+
+export type Reviews = {
+  _id?: Object;
+  name: string;
+  rating: number;
+  comment: string;
+  productId?: string | undefined;
+  user: Object;
+};
+
+export type ShippingInfo = {
+  address: string;
+  city: string;
+  state: string;
+  country: string;
+  pinCode: string;
+  phoneNo: string;
+};
+
+export type OrderItems = {
+  name: string;
+  price: string;
+  quantity: string;
+  image: string;
+  product: Object;
+};
+
+export type PaymentInfo = {
+  id: string;
+  status: string;
+};
 
 export interface UserID {
   username: string;
@@ -21,15 +52,6 @@ export interface UserID {
   generateResetPassword(): string;
 }
 
-export interface Reviews {
-  _id?: Object;
-  name: string;
-  rating: number;
-  comment: string;
-  productId?: string | undefined;
-  user: Object;
-}
-
 export interface ProductID {
   name: string;
   description: string;
@@ -41,6 +63,18 @@ export interface ProductID {
   user: Object;
   noOfreview: number;
   reviews: Reviews[];
+}
+
+export interface OrderID {
+  shippingInfo: ShippingInfo;
+  orderItems: OrderItems[];
+  user: Object;
+  paymentInfo: PaymentInfo;
+  paidAt: Date;
+  itemsPrice: Number;
+  taxPrice: Number;
+  shippingPrice: Number;
+  totalPrice: Number;
 }
 
 export interface MailOption {
