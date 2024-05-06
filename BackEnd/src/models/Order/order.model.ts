@@ -104,6 +104,9 @@ const orderSchema = new mongoose.Schema<OrderID>(
       requried: true,
       default: Date.now,
     },
+    deliverdAt: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

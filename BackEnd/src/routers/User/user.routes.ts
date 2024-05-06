@@ -28,6 +28,9 @@ userRouter.route("/logout").post(verifyToken, userLogout);
 userRouter.route("/updatepassword").post(verifyToken, updatePassword);
 userRouter.route("/updateuserinfo").patch(verifyToken, updateUserInfo);
 userRouter.route("/getcurrentuser").get(verifyToken, getCurrentUser);
+userRouter.route("/refreshaccesstoken").post(refreshAccessToken);
+
+// Admin Access
 userRouter
   .route("/admin/getalluser")
   .get(verifyToken, authorizedRole("admin"), getAllUser);
@@ -40,8 +43,4 @@ userRouter
 userRouter
   .route("/admin/deleteuserinfo/:id")
   .delete(verifyToken, authorizedRole("admin"), deleteUserInfo);
-
-userRouter.route("/refreshaccesstoken").post(refreshAccessToken);
-
 export default userRouter;
-  

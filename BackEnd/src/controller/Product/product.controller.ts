@@ -11,7 +11,7 @@ export const createProduct = PromiseHandler(async (request, response, next) => {
 
   const productDetail = request.body;
 
-  // ***** To check the Product detail are Filled Correct and Product Created ***** //
+  // ***** First Create And check the Product Created ***** //
   const productCreated = await Product.create(productDetail);
   if (!productCreated) {
     return next(
@@ -138,6 +138,7 @@ export const deleteProduct = PromiseHandler(async (request, response, next) => {
     .json(new ApiResponse(200, {}, "Product Deleted Successfully"));
 });
 
+// Create or Update the Reviews
 export const createReview = PromiseHandler(async (request, response, next) => {
   const { rating, comment, productId }: Reviews = request.body;
   const reviews: Reviews = {
@@ -185,6 +186,7 @@ export const createReview = PromiseHandler(async (request, response, next) => {
     );
 });
 
+// Read Single Reviews
 export const singleProductAllReview = PromiseHandler(
   async (request, response, next) => {
     // ***** To check the Product Exist ***** //
@@ -205,6 +207,7 @@ export const singleProductAllReview = PromiseHandler(
   }
 );
 
+// Delete Single Reviews
 export const deleteReview = PromiseHandler(async (request, response, next) => {
   // ***** To check the Product Exist if Exist then Delete the Review ***** //
   const product = await Product.findById(request.query.productId);
