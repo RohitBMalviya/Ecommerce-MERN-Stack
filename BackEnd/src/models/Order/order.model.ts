@@ -22,11 +22,11 @@ const orderSchema = new mongoose.Schema<OrderID>(
         required: true,
       },
       pinCode: {
-        type: String,
+        type: Number,
         required: true,
       },
       phoneNo: {
-        type: String,
+        type: Number,
         required: true,
       },
     },
@@ -37,11 +37,11 @@ const orderSchema = new mongoose.Schema<OrderID>(
           required: true,
         },
         price: {
-          type: String,
+          type: Number,
           required: true,
         },
         quantity: {
-          type: String,
+          type: Number,
           required: true,
         },
         image: {

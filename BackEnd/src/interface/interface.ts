@@ -19,14 +19,14 @@ export type ShippingInfo = {
   city: string;
   state: string;
   country: string;
-  pinCode: string;
-  phoneNo: string;
+  pinCode: number;
+  phoneNo: number;
 };
 
 export type OrderItems = {
   name: string;
-  price: string;
-  quantity: string;
+  price: number;
+  quantity: number;
   image: string;
   product: Object;
 };
@@ -75,8 +75,8 @@ export interface OrderID {
   taxPrice: Number;
   shippingPrice: Number;
   totalPrice: Number;
-  shippingStatus:string,
-  createdAt:Date
+  shippingStatus: string;
+  createdAt: Date;
 }
 
 export interface MailOption {
