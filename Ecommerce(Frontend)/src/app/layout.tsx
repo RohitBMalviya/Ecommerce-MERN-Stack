@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { NextFont } from "next/dist/compiled/@next/font";
 import Navbar from "@/Components/Navbar/Navbar";
 import Footer from "@/Components/Footer/Footer";
+import "./globals.css";
 
 const roboto: NextFont = Roboto({
   weight: ["100", "300", "400", "500", "700", "900"],
@@ -12,7 +13,7 @@ const roboto: NextFont = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Rohit-Ecommerce",
+  title: "KRSHNA",
   description: "Created by Rohit",
 };
 
