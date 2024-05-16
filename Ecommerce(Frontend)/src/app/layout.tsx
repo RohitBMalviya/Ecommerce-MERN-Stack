@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { NextFont } from "next/dist/compiled/@next/font";
 import Navbar from "@/Components/Navbar/Navbar";
 import Footer from "@/Components/Footer/Footer";
+import { ReduxProvider } from "./storeProvider";
 import "./globals.css";
 
 const roboto: NextFont = Roboto({
@@ -25,10 +26,12 @@ export default function RootLayout({
   return (
     <html>
       <head></head>
-      <body className={`${roboto.className}`}>
-        <Navbar />
-        {children}
-        <Footer />
+      <body className={`${roboto.className} bg-gray-400`}>
+        <ReduxProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </ReduxProvider>
       </body>
     </html>
   );
