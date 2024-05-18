@@ -1,8 +1,8 @@
 import { Roboto } from "next/font/google";
 import { Metadata } from "next";
 import { NextFont } from "next/dist/compiled/@next/font";
-import Navbar from "@/Components/Navbar/Navbar";
-import Footer from "@/Components/Footer/Footer";
+import Navbar from "@/components/Navbar/Navbar";
+import Footer from "@/components/Footer/Footer";
 import { ReduxProvider } from "./storeProvider";
 import "./globals.css";
 
@@ -24,9 +24,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }): JSX.Element {
   return (
-    <html>
+    <html lang="en">
       <head></head>
-      <body className={`${roboto.className} bg-gray-400`}>
+      <body
+        className={`${roboto.className} bg-gray-400`}
+        suppressHydrationWarning={true}
+      >
         <ReduxProvider>
           <Navbar />
           {children}
